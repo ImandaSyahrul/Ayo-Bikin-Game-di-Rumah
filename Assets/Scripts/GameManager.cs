@@ -1,13 +1,20 @@
 ﻿using Assets.Scripts.Enum;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    #region Debugging Purpose
+    public bool IsExistsObstacle;
+    #endregion
+
     #region Unity Properties
     public GameObject gObstacle;
     public GameObject gPrefabObstacle;
+    public ScrollBar ScrollBar;
+    public ScrollBar ScrollKejenuhan;
     #endregion
 
     #region Unity Events
@@ -31,13 +38,17 @@ public class GameManager : MonoBehaviour
     private bool _obstacleExists { get; set; }
     private double _life { get; set; } // 0 - 1
     private double _lifeDecInc { get; set; }
-    private int _timer { get; set; } //seconds
+    private TimeSpan _timer { get; set; } //seconds    
+    private double _maxTimer { get; set; } //seconds    
     #endregion
 
     #region Public Method
-
     public void UpdateTick()
-    {        
+    {
+        //For Debugging 
+        _obstacleExists = IsExistsObstacle;
+        //
+
         if (_gameRunning)
         {
             if (_obstacleExists)
@@ -46,10 +57,15 @@ public class GameManager : MonoBehaviour
             if (IsGameOver())
                 SetGameState(GameState.Lose);
 
-            DecreaseTimer();
-            if (_timer <= 0)
+            if(!_obstacleExists)
+                DecreaseTimer();
+
+            if (_timer.TotalSeconds <= 0)
                 SetGameState(GameState.Win);
-        }
+            
+            ScrollBar.value = _timer.TotalSeconds / _maxTimer;
+            ScrollKejenuhan.value = _life;
+        }        
     }
     public bool IsGameOver()
     {        
@@ -59,9 +75,9 @@ public class GameManager : MonoBehaviour
             return false;
     }
     public void DecreaseTimer()
-    {        
-        if(_gameRunning)
-            _timer--;                            
+    {
+        if (_gameRunning)
+            _timer = _timer.Subtract(new TimeSpan(0, 0, 0, 1, 0));
     }
 
     public void DecreaseLife()
@@ -76,11 +92,12 @@ public class GameManager : MonoBehaviour
         _obstacleExists = true;
     }
 
-    public void ResetGame(int timer)
+    public void ResetGame(TimeSpan timer)
     {
+        _maxTimer = (int)timer.TotalSeconds;
         _timer = timer;
         _life = 1;
-        _lifeDecInc = 0.01f;
+        _lifeDecInc = 0.0001f;
     }
 
     public void PlayGame()
@@ -89,7 +106,7 @@ public class GameManager : MonoBehaviour
     }
 
     public void SetGameState(GameState gameState)
-    {
+    {        
         switch (gameState)
         {
             case GameState.Idle:
@@ -99,11 +116,12 @@ public class GameManager : MonoBehaviour
             case GameState.Play:
                 {
                     _gameRunning = true;
-                    ResetGame(1000);
+                    ResetGame(new TimeSpan(1,0,0));
                     break;
                 }
             case GameState.Lose:
                 {
+                    Debug.Log("Loose");
                     _gameRunning = false;
                     break;
                 }
