@@ -19,9 +19,7 @@ public class PlayerHandler : MonoBehaviour
         if (_touchedObject != null)
             if (_touchedObject.CompareTag("Player"))
             {
-                Debug.Log(_touchedObject.transform.tag);
-                Debug.Log("TOUCHED!! " + _touchedObject.transform.name);
-                // Menambahkan bar kejenuhan ke game manager
+                GameManager.gGameManager.IncreaseValueOfPlayer();
             }
     }
 }

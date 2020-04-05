@@ -23,10 +23,8 @@ public class ObstacleHandler : MonoBehaviour
         if (_touchedObject != null)
             if (_touchedObject.CompareTag("Obstacle"))
             {
-                Debug.Log(_touchedObject.transform.tag);
-                Debug.Log("TOUCHED!! " + _touchedObject.transform.name);
-                // _touchedObject.SetActive(false);
-                //    Set GameManager._obstacleExists to false
+                _touchedObject.SetActive(false);
+                GameManager.gGameManager._obstacleExists = false;
             }
     }
 }
