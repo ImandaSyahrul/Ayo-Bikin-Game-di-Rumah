@@ -40,7 +40,8 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Object Properties
-
+    
+    float elapsed = 0f;
     public static GameManager gGameManager { get; set; }
     public GameState GameState { get; set; }
     private bool _gameRunning { get; set; }
@@ -63,18 +64,17 @@ public class GameManager : MonoBehaviour
 
         if (_gameRunning)
         {
-            if (_obstacleAllowedToSpawn)
-            {
+            elapsed += Time.deltaTime;
+            if (elapsed >= 3f) {
+                elapsed = elapsed % 3f;
                 InstantiateObstacle();
             }
-
+            
             if (_obstacleExists)
                 DecreaseLife();
             else
             {
                 DecreaseLifeWithoutObstacle();
-                if (!_obstacleAllowedToSpawn)
-                    StartCoroutine(ObstacleSpawnPeriodCoroutine());
             }
 
             if (IsGameOver())
@@ -180,12 +180,7 @@ public class GameManager : MonoBehaviour
         GameManager.gGameManager = this;
         GameState = GameState.Idle;
     }
-
-    IEnumerator ObstacleSpawnPeriodCoroutine()
-    {
-        yield return new WaitForSeconds(3f);
-        _obstacleAllowedToSpawn = true;
-    }
+    
 
     #endregion
 }
