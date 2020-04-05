@@ -361,9 +361,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cab10d3562669b845b64220002e54243, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsExistsObstacle: 0
   gObstacle: {fileID: 0}
   gPrefabObstacle: {fileID: 0}
   ScrollBar: {fileID: 2024963065}
+  ScrollKejenuhan: {fileID: 1227881650}
 --- !u!114 &684097077
 MonoBehaviour:
   m_ObjectHideFlags: 0
